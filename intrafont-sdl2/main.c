@@ -72,30 +72,25 @@ int main(int argc, char *argv[])
 
     SDL_UpdateTexture(texture, &rect, font->texture, rect.w * sizeof(Uint32));
 
-    SDL_Vertex v[font->v_size];
-
-    for (int i = 0; i < font->v_size; i++)
+    for (int i = 0; i < font->v_size; i += 6)
     {
-      // printf("v[%d].u = %0.2f (tex u) ", i, font->v[i].u);
-      // printf("v[%d].v = %0.2f (tex v) ", i, font->v[i].v);
-      // printf("v[%d].c = %x (rgba8888) ", i, font->v[i].c);
-      // printf("v[%d].x = %2.2f ", i, font->v[i].x);
-      // printf("v[%d].y = %2.2f ", i, font->v[i].y);
-      // printf("v[%d].z = %2.2f ", i, font->v[i].z);
-      // printf("\n");
-
-      struct fontVertex fv = font->v[i];
-      SDL_Color c = {255, 255, 255, 255};
-      SDL_FPoint p = {fv.x, fv.y};
-      SDL_FPoint t = {fv.u, fv.v};
-      v[i] = (SDL_Vertex){p, c, t};
-      SDL_RenderDrawPointF(renderer, p.x, p.y);
-      SDL_RenderDrawPointF(renderer, t.x * rect.w, t.y * rect.h);
+      SDL_Rect srcRect = {
+          font->v[i].u * rect.w,
+          font->v[i].v * rect.h,
+          (font->v[i + 2].u - font->v[i].u) * rect.w,
+          (font->v[i + 2].v - font->v[i].v) * rect.h
+        };
+      SDL_Rect dstRect = {
+          font->v[i].x,
+          font->v[i].y,
+          font->v[i + 2].x - font->v[i].x,
+          font->v[i + 2].y - font->v[i].y
+        };
+      SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
     }
 
     // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     // SDL_RenderCopy(renderer, texture, &rect, &rect);
-    SDL_RenderGeometry(renderer, texture, v, 1 * 4, NULL, 0);
     SDL_RenderPresent(renderer);
   }
 
