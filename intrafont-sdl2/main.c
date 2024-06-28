@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
   intraFont *font = NULL;
 
   intraFontInit();
-  font = intraFontLoad("ltn8.pgf", 0);
+  font = intraFontLoad("ltn8_ppsspp.pgf", 0);
 
   SDL_Window *window = SDL_CreateWindow(
       "window",
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
     // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     // SDL_RenderCopy(renderer, texture, &rect, &rect);
-    SDL_RenderGeometry(renderer, texture, &v[60], 60, NULL, 0);
+    SDL_RenderGeometry(renderer, texture, v, 60, NULL, 0);
     SDL_RenderPresent(renderer);
   }
 
