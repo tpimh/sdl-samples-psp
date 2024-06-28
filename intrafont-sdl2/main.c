@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
   SDL_Rect rect = {0, 0, font->texWidth, font->texHeight};
-  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, font->texWidth, font->texHeight);
+  SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, font->texWidth, font->texHeight);
 
   int running = 1;
   SDL_Event event;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     SDL_RenderClear(renderer);
 
     intraFontSetStyle(font, 1.0f, BLACK, WHITE, 0.0f, INTRAFONT_ALIGN_CENTER);
-    intraFontPrint(font, 240, 240, "Hello PSP!");
+    intraFontPrint(font, 240, 240, "Hello_PSP!");
 
     SDL_UpdateTexture(texture, &rect, font->texture, rect.w * sizeof(Uint32));
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
       // printf("\n");
 
       struct fontVertex fv = font->v[i];
-      SDL_Color c = {255, 255, 255, 255};
+      SDL_Color c = {fv.c >> 24, fv.c >> 16, fv.c >> 8, fv.c};
       SDL_FPoint p = {fv.x, fv.y};
       SDL_FPoint t = {fv.u, fv.v};
       v[i] = (SDL_Vertex){p, c, t};
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
     // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     // SDL_RenderCopy(renderer, texture, &rect, &rect);
-    SDL_RenderGeometry(renderer, texture, v, 1 * 4, NULL, 0);
+    SDL_RenderGeometry(renderer, texture, &v[60], 60, NULL, 0);
     SDL_RenderPresent(renderer);
   }
 
